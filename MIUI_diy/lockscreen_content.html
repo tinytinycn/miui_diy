@@ -1,0 +1,1341 @@
+<head>
+<link title="style" href="css/index.css" type="text/css" rel="stylesheet"/>
+<title>百变锁屏 by xzh&trade;</title>
+</head>
+
+<div id="navigation">
+			<li class="function">基本功能</li>
+			<a href="#manifest"><li>manifest.xml</li></a>
+			<a href="#wallpaper"><li>壁纸部件</li></a>
+			<a href="#variable"><li>变量& 变量数组</li></a>
+			<a href="#variable_sys"><li>系统变量,src除外</li></a>
+			<a href="#expression"><li>表达式</li></a>
+			<a href="#text"><li>文本部件</li></a>
+			<a href="#time"><li>时间部件</li></a>
+			<a href="#date"><li>日期部件</li></a>
+			<a href="#image"><li>图片部件</li></a>
+			<a href="#animation"><li>元素动画</li></a>
+			<a href="#image_mask"><li>图片遮罩</li></a>
+			<a href="#category"><li>category属性</li></a>
+			<a href="#slider"><li>Slider部件</li></a>
+			<a href="#button"><li>按钮部件</li></a>
+			<a href="#musicControl"><li>音乐部件</li></a>
+			<a href="#volume"><li>音量调节变量</li></a>
+			<a href="#update"><li><add>update!</add></li></a>
+			<br />
+			<li class="function">高级功能</li>
+			<a href="#contentPrivider"><li>content privider</li></a>
+			<a href="#broadcast"><li>broadcast<add>新增！</add></li></a>
+			<a href="#triggers"><li>Triggers<add>新增！</add></li></a>
+			<a href="#3Dandscale"><li>3D旋转& 缩放<add>新增！</add></li></a>
+			<a href="#diy"><li>个性化设置<add>新增！</add></li></a>
+			<a href="#webservice"><li>Webservice查询<add>新增！</add></li></a>
+			<a href="#framerate"><li>动态帧率</li></a>
+			<a href="lockscreen_skill.html"><li>技巧贴！</li></a>
+			<br />
+			<li class="function"><a href="index.html"><b>返回【主页】</b></a></li>
+</div>
+
+<div id="main_content">
+			<h2>MIUI百变锁屏教程</h2>
+			<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们的目标是最大化锁屏界面的自由度，让解锁界面和解锁方式可以高度自由！
+			百变锁屏进入2.0新时代，更多更酷的新功能等你去开发!</p>
+			
+			<hr/>
+			<div id="content">
+				<h4>manifest.xml</h4>
+				<a name="manifest">
+				<p class="part">
+<listing>
+lockscreen/advance目录下，manifest.xml文件是描述脚本.
+Lockscreen属性:
+	version,frameRate,displayDesktop,frameRateCharging,frameRateBatteryLow,frameRateBatteryFull,screenWidth..
+	frameRate:指定帧率，如果动画缓慢，指定小一点的值，省电。默认为30 .
+	displayDesktop:默认为false，透视到桌面，如果没有锁屏壁纸或壁纸可被移开或透明时可以看到桌面及应用程序.
+*界面元素的遮挡取决于在xml中出现的先后，最先出现的在最下层(下层优先显示).
+</listing>	 
+<pre>
+&lt?xml version="1.0" encoding="utf-8"?&gt
+&ltLockscreen &gt
+	&ltWallpaper/&gt            //////////壁纸部件
+	
+	&ltGroup &gt
+		&ltText /&gt
+		&ltImage /&gt
+	&lt/Group&gt
+	
+	&ltText /&gt                //////////文本部件
+	&ltImage /&gt               //////////图片部件
+	&ltTime /&gt                //////////时间部件
+	&ltDateTime /&gt            //////////日期部件
+
+	&ltUnlocker &gt             //////////解锁部件(继承Silder部件)
+		&ltStartPoint&gt	
+		&lt/StartPoint&gt
+		&ltEndPoint&gt		
+		&lt/EndPoint&gt
+	&lt/Unlocker&gt
+&lt/Lockscreen&gt
+</pre>
+				</p>
+			</div>
+			
+			
+			<hr/>
+			<div id="content">
+				<h4>壁纸元素</h4>
+				<a name="wallpaper">
+				<p class="part">
+<listing>
+Wallpaper属性：
+	引用系统设置的壁纸，不能指定图片源src.
+	其它属性(同Image):可以有动画和其他属性控制.
+*没有此元素则不显示壁纸.
+*可以有多个.
+<pre>&ltWallpaper/&gt</pre>
+</listing>
+
+				</p>
+			</div>
+			
+			
+			<hr/>
+			<div id="content">
+				<h4>变量& 变量数组</h4>
+				<a name="variable">
+				<p class="part">
+<listing>
+Var VarArray 分别定义单个变量和变量数组
+Var VarArry属性：
+	name 变量名
+	expression 变量对应的表达式或常量 
+		注意：如果定义字符串常量需要 多一套单引号'': expression=" 'my string' "
+	type= number/string  定义数值变量或字符串变量   默认：number
+	const=true 变量只在初始化时计算一次，以后不会重新计算，可提高效率。如果变量值会在锁屏运行期间改变，const设为false 默认：false
+	
+	Item  数组元素定义
+	expression 元素对应的表达式
+	value 如果元素是常量，则用value指定常量值
+</listing>
+<pre>
+&ltVar name="" expression="" type="" const=""/&gt 
+
+&ltVarArray type="string"&gt
+   &ltVars&gt
+      &ltVar name="date_format1" index="#time/2000%5"/&gt
+      &ltVar name="date_format2" index="2" const="true"/&gt
+      ...
+   &lt/Vars&gt 
+   &ltItems&gt
+      &ltItem expression="ifelse(isnull(@date_format),'MMMMd日 EEEE', @date_format)"/&gt
+      &ltItem value="EEEE"/&gt
+      ...
+   &lt/Items&gt
+&lt/VarArray&gt
+</pre>
+
+ 
+<pre>
+// 定义了一个每隔两秒轮换一次日期显示格式的DateTime元素.
+//数组元素可以用来根据数字变量值显示不同的字符串
+&ltVar name="show_date" expression="ifelse(isnull(#show_date),1,#show_date )" type="number" const="true"/&gt
+&ltVar name="text_size_date" expression="ifelse(isnull(#text_size_date),18,#tex t_size_date)" type="number" 
+const="true"/&gt
+&ltVarArray type="string"&gt
+   &ltVars&gt
+      &ltVar name="date_format1" index="#time/2000%5"/&gt
+      &ltVar name="date_format2" index="2" const="true"/&gt
+   &lt/Vars&gt
+   &ltItems&gt
+      &ltItem expression="ifelse(isnull(@date_format),'MMMMd日 EEEE', @date_format)"/&gt
+      &ltItem value="EEEE"/&gt
+      &ltItem value="yyyy年"/&gt
+      &ltItem value="MMMM"/&gt
+      &ltItem value="d日"/&gt
+   &lt/Items&gt
+&lt/VarArray&gt
+
+// 显示英文月份
+&ltVarArray type="string"&gt
+   &ltVars&gt
+      &ltVar name="month_str" index="#month"/&gt
+   &lt/Vars&gt
+   
+   &ltItems&gt
+      &ltItem value="January"/&gt
+      &ltItem value="February"/&gt
+      ...
+      &ltItem value="November"/&gt
+      &ltItem value="December"/&gt
+   &lt/Items&gt
+&lt/VarArray&gt
+
+&ltText text="@month_str" color="#FFFFFFFF" size="20" ... /&gt
+&ltDateTime visibility="#show_date" x="#screen_width/2" y="100" align="center" color="#AAEEEEEE" size="#text_size_date" format="@date_format1"&gt
+</pre>
+<add>
+新增:Var变量阈值触发 threshold 阈值; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbspVar下面的&ltTrigger&gt用来指定触发. <br />
+详见<a href="http://www.miui.com/forum.php?mod=viewthread&tid=820336&page=1&extra=#pid17599095">http://www.miui.com/forum.php?mod=viewthread&tid=820336&page=1&extra=#pid17599095</a>
+</add>
+
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>系统变量</h4>
+				<a name="variable_sys">
+				<p class="part">
+<listing>
+当前支持变量:(以#开头)
+*部件变量： 部件名.属性名  #unlocker.move_x
+ move_x  解锁时在x方向移动距离
+ move_y  解锁时在y方向移动距离
+ move_dist 解锁时移动距离
+ state 解锁状态： 正常:0 按下:1 到达解锁位置:2
+<add>
+ 新增:触摸开始时间变量#touch_begin_time ，可以在Button的up事件中用来
+ 计算滑动速度:v = (#touch_x - #touch_begin_x)/(#time_sys - #touch_begin_time)
+</add>
+*全局变量：
+ time 当前时间，long
+ touch_x 当前触摸点 x
+ touch_y 当前触摸点 y
+ screen_width 屏幕宽度
+ screen_height 屏幕高度
+ raw_screen_width 未经缩放后的原始屏幕宽度
+ raw_screen_height 未经缩放后的原始屏幕高度
+ battery_level 电池电量 0-100
+ battery_state 电池状态： 正常:0 充电:1 电量低:2 已充满:3
+ sms_unread_count 未读短信
+ call_missed_count 未接电话
+ 
+*时间日期变量
+ time_sys 系统当前时间毫秒数。
+ ampm 上/下午 // 0 am,1 pm
+ hour12 小时，12小时制
+ hour24 小时，24小时制
+ minute 分钟
+ second 秒
+ year 年
+ month 月  //0-11
+ date 日
+ day_of_week 星期  // 1-7 星期日到星期六
+<add>
+新增:系统时间格式变量
+#time_format   0: 12小时制; 1: 24小时制
+</add>
+intercept_sys_touch是否截获以后的触摸事件，避免被其他View捕获，例如在自由桌面widget中可以防止在widget上进行触摸操作时桌面滚动和进入编辑模式
+</listing>
+<pre>
+//alpha值的变量表达式表示该图片只有在非充电状态显示，并且随着解锁水平方向的拖动逐渐变透明至
+消失。	
+&ltImage x="162" y="#screen_height-84" src="test.png" 
+alpha="(255-#unlocker.move_x/100*255)*min(1, abs(1-#battery_state))"/&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>表达式</h4>
+				<a name="expression">
+				<p class="part">
+<listing>
+支持加减乘除取模括号和函数
+* 加减乘除取模 : + - * / %  
+* 支持函数:sin, cos, tan, asin, acos, atan, sinh, cosh, sqrt, abs, min, max  
+	len(数字)  给定数字位数 len(1234)=4
+	digit(数字, 第几位) 取给定数字的第几位 digit(1234, 2) = 3
+	round() 四舍五入取整  int()向下取整
+	eq(x, y) // x==y ? 1 : 0
+	ne(x, y) // x!=y ? 1 : 0
+	ge(x, y) // x>=y ? 1 : 0
+	gt(x, y) // x>y ? 1 : 0
+	le(x, y) // x<=y ? 1 : 0
+	lt(x, y) // x<y ? 1 : 0
+	isnull(x) // x==null ? 1 : 0 // 是否表达式包含空变量，通常用于判断绑定的变量是否查到数据
+	not(x) x>0 ? 0 : 1
+	ifelse(x, y, z) // x>0 ? y : z
+	ifelse(x1, y1, x2, y2, ... , z)
+	if x1>0 return y1; else if x2>0 return y2; ... ; else return z
+* + 可以拼接字符串,一些函数也可以支持字符串.
+* isnull 可以判断字符串变量是否为空.
+* ifelse 可以选择字符串.
+* eqs(@string1, @string2) 字符串比较函数
+* 元素可见性支持表达式
+	visibility=“表达式”  <=0 不可见  >0可见
+	Image, Time, Text 属性 align= left, center, right   坐标点水平对齐方式
+	Image, Time 属性 alignV= top, center, bottom   坐标点垂直对齐方式
+<add>新增：取字符串子串操作函数:
+	substr(string,start)  substr(string,start,length)
+	string: 源字符串  start：开始位置   length：子串长度，没有指定默认取开始位置后所有字符
+	设有一个字符串：MIUI为发烧而生123
+	那么：len（'MIUI为发烧而生123' ）=12      判断一个字符串的长度 
+	 substr( 'MIUI为发烧而生123',0,9)=MIUI为发烧而生 
+	 substr( 'MIUI为发烧而生123',4,7)= 为发烧而生12
+</add>
+</listing>
+			</p>	
+		</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>文本部件</h4>
+				<a name="text">
+				<p class="part">
+<listing>
+显示指定格式的文字.
+Text属性:
+	x y :坐标支持变量 
+	color: 文字颜色，#FFFFFFFF 
+	size: 文字大小 
+	format: 如果需要在文字中显示变量数字，需要指定格式, 用%d 指定数字位置
+	paras: 如果指定了format, 需要在paras里指定%d对应的变量表达式, 可以有多个变量表达式用"," 隔开
+	align: left, center, right，文字坐标的对齐方式 (不支持alignV)
+	angle: 旋转角度,文字和日期都支持旋转 
+		&ltText angle=""/&gt 
+	marqueeSpeed: 新增自动滚动功能,如果制定了宽度和滚动速度,文字超过宽度的时会自动滚动显示
+		如果制定了宽度和滚动速度marqueeSpeed,文字超过宽度的时会自动滚动显示文本支持多行
+		&ltText  name="text1" multiLine="true" width="150" .../ 
+		#text1.text_height 为折行后的高度
+Text可选属性:
+	spacingMult  行距倍数 默认1
+	spacingAdd  行距增加量 默认0
+	next_alarm_time 下一个闹钟时间
+		&ltText text="@next_alarm_time" .../&gt
+文本元素支持文字宽度变量属性 text_width
+	&ltText name="tt" .../&gt 
+	#tt.text_width 
+</listing>				
+<pre>
+&ltText format="下一个闹钟:[%s] 电池:[%d%%]" paras="@next_alarm_time,#battery_level"/&gt
+</pre>
+					
+<pre>
+&ltText x="" y="" text="" color="" size="" format="" paras="#x,#y" align="" marqueeSpeed=""&gt
+   &ltPositionAnimation/&gt
+&lt/Text&gt
+</pre>
+					
+<pre>
+&ltText x="240" y="130+#unlocker.move_y" category="Charging" color="#AAFFFFFF" alpha="200" 
+size="24" format="正在充电(%d%%)" paras="#battery_level" align="center"/&gt
+</pre>
+					
+textExp属性支持字符串表达式：
+<pre>
+//天气信息，如果温度为空显示-- 非空显示数值
+&ltText visibility="#hasweather" x="(#screen_width/2)+180" y="#screen_height-290" 
+w="360" size="36" color="#ffffff" align="right"
+textExp="ifelse(isnull(#weather_temperature),'--',#weather_temperature) + '℃'"
+/&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>时间部件</h4>
+				<a name="time">
+				<p class="part">
+					x y 支持变量表达式<br />
+					src 时间图片的前缀.png<br />
+					参考使用 time_0.png, time_1.png, ... time_9.png, time_dot.png(一个都不能少0-9,dot).
+<pre>
+&ltTime x="10" y="10" src="time.png"&gt
+&lt/Time&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>日期部件</h4>
+				<a name="date">
+				<p class="part">
+<listing>
+显示指定格式日期.
+DateTime属性:
+	format: 支持标准日期格式, 另外增加农历: NNNN
+	&ltDateTime x="" y="" color="" size="" align="" alignV="" format=""&gt 
+	  &emsp;&ltPositionAnimation/&gt 
+	&ltDateTime&gt 
+<pre>
+//格式样例
+九月：
+M -> 9
+MM -> 09
+
+7分钟:
+m -> 7
+mm -> 07
+mmm -> 007
+mmmm -> 0007
+
+1970年4月6日 3:23am
+"yyyy/MM/dd h:mmaa" -> "1970/04/06 3:23am"
+"M月d日 h:mmaa" -> "4月6日 3:23am"
+"E" -> "周三"
+"EEEE" -> "星期三"
+"纪念日: M/d" -> "纪念日: 4/6"
+
+24小时: "kk:mm" -> "13:34"
+</pre>	
+</listing>
+				</p>
+			</div>
+				
+			<hr/>
+			<div id="content">
+				<h4>图片部件</h4>
+				<a name="image">
+				<p class="part">
+<listing>
+图片部件用来在锁屏界面上显示一个图片.
+* Image属性：
+	x,y : 相对于屏幕左上角的坐标
+	w,h : 宽和高
+	centerX, centerY : 旋转中心
+	angle : 旋转角度，一周360度
+	src : 图片名称
+	srcid : 图片序列后缀数字，一般用变量表示，可以根据变量显示不同的图片，如果src="pic.png" srcid="1" 则最后会显示图片 "pic_1.png"
+	alpha : 透明度 0-255, 小于等于0不显示
+	antiAlias: true/false  抗锯齿，如果为true图片在变形旋转时不会有锯齿，但是速度会慢
+	srcExp:图片源表达式
+	srcFormat:图片源格式
+	srcForamtExp:图片源格式表达式
+	srcParas:图片源参数
+		&ltImage x="0" y="#screen_height-323" src="bottom_bg.png"/&gt 
+* 图片实际位置变量,可获得部件在动画时的实际位置：
+actual_x actual_y actual_w actual_h
+#img.actual_x  #img.actual_y
+<add>
+新增: Image元素增加图片大小属性  bmp_width, bmp_height
+&ltImage name="img" src="test.png"/&gt
+#img.bmp_width #img.bmp_height
+</add>
+* 图片显示数字的部件 &ltImageNumber number="" src=""&gt
+	number是要显示的数字表达式 
+	src是图片源的文件名，支持SourceAnimation 
+	如果src="number.png"  则会使用 number_0.png number_1.png ... 图片文件来绘制数字。类似Time部件
+</listing>
+<pre>
+//srcExp:图片源表达式
+&ltImage x="210" y="-26" align="center" srcExp="'weather/weather_' + #weather_id + @icon_suffix + '.png'"/&gt
+</pre>		
+	<add>
+	* 新增：Image元素支持截取锁屏界面以下的系统界面<br />
+	&emsp;&ltImage name="homescreen" srcType="Screenshot"/&gt <br />
+	&emsp;命令控制重新截屏<br />
+	&emsp;&ltCommand target="homescreen.animation" value="play"/&gt <br />
+	&emsp;可以用来做一些效果，比如把锁屏下面的桌面从左到右拖动出现 <br />
+	</add>
+	<br />
+	<add>
+	新增：图片3D旋转支持 z轴高度: centerZ ; z轴旋转: angleZ  <br />
+	&emsp;&ltImage ... centerZ="250*2" angleZ="60" /&gt <br />
+	</add>
+	<br />
+	<add>
+	新增：支持获取应用程序图标: <br/>
+	&emsp;&emsp;<a href="http://www.miui.com/thread-673303-1-1.html">http://www.miui.com/thread-673303-1-1.html</a>
+	</add>
+				</p>
+			</div>
+
+			<hr/>
+			<div id="content">
+				<h4>元素动画</h4>
+				<a name="animation">
+				<p class="part">
+<listing>
+* 所有元素都支持动画.
+* 动画分为:图片源，位置，大小，旋转，透明度.
+* 每种动画相互独立，各自循环播放.       
+*动画由若干关键帧组成，关键帧包括帧属性和时间，除图片源动画外，其它动画会根据当前时间找到相邻的两个关键帧，然后线性插值计算当前的属性.
+ 如果第一帧时间不从0开始，则默认时间为0的第一帧为图片原始属性,时间单位为毫秒.
+ 位置动画中的位置是相对于图片自身的坐标.
+</listing>
+				</p>
+<pre>
+&ltImage&gt
+   &ltPositionAnimation&gt
+      &ltPosition x="10" y="20" time="100"/&gt
+      &ltPosition x="100" y="200" time="1000"/&gt
+   &lt/PositionAnimation&gt
+&lt/Image&gt
+
+&ltRotationAnimation&gt
+   &ltRotation angle="" time=""/&gt
+   &ltRotation angle="" time=""/&gt 
+&lt/RotationAnimation&gt
+
+&ltSizeAnimation&gt
+   &ltSize w="" h="" time=""/&gt
+   &ltSize w="" h="" time=""/&gt
+&lt/SizeAnimation&gt
+
+&lt!-- 0-255 --&gt
+&ltAlphaAnimation&gt 
+   &ltAlpha a="" time=""/&gt
+   &ltAlpha a="" time=""/&gt
+&lt/AlphaAnimation&gt
+</pre>	
+				
+					例子：位置动画表示1秒从屏幕最左端到最右端，停留1秒，透明度动画表示开始透明度为175，在从最左端到最右端过程中透明度不变，到达最右端后0.5秒渐变为不透明，然后0.5秒变为透明消失。 然后循环播放。
+<pre>					
+&ltImage x="0" y="#screen_height-177" src="charging_light.png" category="Charging"&gt 
+   &ltPositionAnimation&gt
+      &ltPosition x="480" y="0" time="1000"/&gt
+      &ltPosition x="480" y="0" time="2000"/&gt
+   &lt/PositionAnimation&gt
+   &ltAlphaAnimation&gt 
+      &ltAlpha a="175" time="0"/&gt
+      &ltAlpha a="175" time="1000"/&gt
+      &ltAlpha a="255" time="1500"/&gt
+      &ltAlpha a="0" time="2000"/&gt
+   &lt/AlphaAnimation&gt
+&lt/Image&gt
+</pre>
+
+				注意：只有图片支持图片源动画(ImageNumber也支持)<br />
+				图片源动画稍有不同，没有插值，x, y 可选，表示相对图片的位置， 当前的图片是在列表里的找到第一个大于当前时间的那个点指定的
+<pre>
+&ltSourcesAnimation&gt
+   &ltSource x="" y="" src="pic1.png" time="100"/&gt
+   &ltSource x="" y="" src="pic2.png" time="1000"/&gt
+&lt/SourcesAnimation&gt
+</pre>
+				
+			</div>
+				
+			<hr/>
+			<div id="content">
+				<h4>图片遮罩</h4>
+				<a name="image_mask">
+				<p class="part">
+<listing>
+x,y 坐标
+src 遮罩图片源，不透明黑色部分表示不透明，其他部分为透明.
+align：坐标是相对于所属图片还是绝对位置，如果是相对，图片移动是遮罩会相应跟随移动。否则遮罩保持不动.
+<pre>
+&ltMask x="" y="" src=""  centerX="" centerY="" angle="" align=""&gt 
+   &ltSourcesAnimation/&gt 
+   &ltRotationAnimation/&gt
+   &ltPositionAnimation/&gt
+&lt/Mask&gt
+</pre>
+遮罩同样可以有源动画，旋转动画，和位置动画，属性支持变量表达式.
+<pre>
+&ltImage x="444" y="#screen_height-92" src="hs_path_light.png"&gt 
+   &ltPositionAnimation&gt 
+      &ltPosition x="-438" y="0" time="2000"/&gt
+   &lt/PositionAnimation&gt
+   &ltMask x="0" y="#screen_height-92" src="hs_path_mask_r.png" align="absolute"/&gt
+&lt/Image&gt
+</pre></listing>    </p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>category属性</h4>
+				<a name="category">
+				<p class="part">
+<listing>
+* 界面上除解锁部件外所有元素可以指定 category属性.
+  category值: Charging  BatteryLow BatteryFull Normal;
+  指定category属性的元素仅会在该状态下显示，可以用来做充电文字，动画等的显示.
+<pre>&ltImage x="100" y="100" src="pic.png" category="Charging"/&gt </pre></listing>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>Slider部件</h4>
+				<a name="slider">
+				<p class="part">
+<listing>
+* Slider属性：(<b>Unlocker</b>继承于Slider)
+	name: 名字，用来做变量名
+	bounceInitSpeed: 回弹动画初始速度
+	bounceAccelation: 回弹动画加速度(距离单位为像素，时间单位为秒)，都支持表达式.<pre>
+	&ltUnlocker name="unlocker"  bounceInitSpeed="-5*#unlocker.move_y" bounceAcceleration="12.5*#unlocker.move_y"&gt
+	这是从下往上滑动解锁的代码，初始速度表达式表示移动距离越远速度越快，
+	因为是从下往上滑动，move_y是负值，所以最后也取负值。
+	加速度的表达式是根据回弹到初始位置时的速度计算出来的，
+	比如我们想让回到初始位置时速度为零，根据匀变速运动公式
+	可以计算出加速度的表达式 a=-v*v/2d  a: 加速度 v:速度 d:移动距离
+</pre>
+* 可以有任意个Slider部件(多个Unlocker).
+* 锁屏音效
+	StartPoint: normalSound, pressedSound ,指定在normal和press状态播放的音效
+	EndPoint: reachedSound, 到达该endpoint后播放的音效
+<pre>
+&ltUnlocker name="unlocker"&gt
+   &ltStartPoint x="0" y="440" w="480" h="400" normalSound="sound_normal.mp3" pressedSound="sound_normal.mp3"&gt
+   &ltEndPoint x="0" y="640" w="480" h="400" reachedSound="sound_reached.mp3"&gt
+&lt/Unlocker&gt
+</pre>
+* 起始点，表示点击区域，坐标和宽高，起始点中包含的元素都会跟随当前操作的拖动移动位置.
+  alwaysShow="true/false"
+</listing>
+<pre>
+&ltStartPoint x="" y="" w="" h="" normalSound="" pressedSound=""&gt
+   正常状态，可以包含若干元素 
+   &ltNormalState&gt 
+      &ltImage/&gt
+      &ltTime/&gt
+      &ltDateTime/&gt
+      &ltText/&gt
+   &lt/NormalState&gt 
+   在点击区域按下，表示开始触发操作，拖动，隐藏其他状态元素，显示这些元素，
+   &ltPressedState&gt
+      &ltImage/&gt
+      &ltTime/&gt
+      &ltDateTime/&gt
+      &ltText/&gt 
+   &lt/PressedState&gt 
+   达到触发目标后，隐藏其他元素，显示这些元素
+   &ltReachedState&gt
+      &ltImage/&gt
+      &ltTime/&gt
+      &ltDateTime/&gt
+      &ltText/&gt 
+   &lt/ReachedState&gt 
+&lt/StartPoint&gt
+</pre>
+					三个状态都可以不指定，可以使用变量来改变其他界面元素状态来表示触发过程.<br /><br />
+					
+					* Slider目的，坐标和大小，当起始点的x,y点落入EndPoint目标区域矩形时，达到触发位置，此时松开手指即可以产生触发<br />
+					可以有多个触发目的<br />
+<pre>
+&ltEndPoint x="" y="" w="" h="" reachedSound=""&gt 
+   //Slider执行的动作，可以指定不同的intent
+   &lt Intent action="" type="" category="" package="" class=""/&gt
+   &ltNormalState&gt
+   &lt/NormalState&gt
+   
+   &lt!-- show the target position if pressed trying to unlock--&gt
+   &ltPressedState&gt
+   &ltImage/&gt
+   &lt/PressedState&gt
+   
+   &lt!-- show specified image when reached target, if touch up then perform unlock--&gt
+   &ltReachedState&gt
+      &ltImage/&gt
+   &lt/ReachedState&gt
+</pre>
+//Slider路径 tolerance：开始触发操作后移动时路径最大距离超过这个值则取消，回到正常状态.<br />
+  Path可以指定 x,y坐标，默认为0，Position的坐标为相对坐标.
+<pre>
+   &ltPath x="" y="" tolerance=""&gt 
+      &ltPosition x="" y="" /&gt 
+      &ltPosition x="" y="" /&gt
+   &lt/Path&gt
+&lt/EndPoint&gt
+</pre>
+					例子:
+<pre>
+&ltSlider name="slider"&gt
+   &ltStartPoint x="31" y="#screen_height-117" w="90" h="90"&gt
+      &ltNormalState&gt 
+         &ltImage x="31" y="#screen_height-117" src="unlock_button.png"&gt
+         &lt/Image&gt 
+     &lt/NormalState&gt
+   &lt/StartPoint&gt
+   
+   &ltEndPoint x="359" y="#screen_height-117" w="90" h="90"&gt
+      &ltPressedState&gt 
+         &ltImage x="359" y="#screen_height-117" src="unlock_target.png"&gt
+         &lt/Image&gt
+     &lt/PressedState&gt 
+     &ltPath x="0" y="#screen_height-117"&gt 
+         &ltPosition x="31" y="0" /&gt 
+         &ltPosition x="359" y="0" /&gt
+     &lt/Path&gt
+   &lt/EndPoint&gt
+&lt/Slider&gt
+</pre>
+				Slider的intent也可以为Trigger和Command，一个Trigger可以有多个Command。<br />
+				Trigger和Command请见<a href="#triggers">Triggers</a><br />
+				
+				<add>
+					新增：支持延迟解锁，可以在解锁前做一些过渡动画   <br />
+					<Unlocker delay="" />    delay: 毫秒 <br />
+					新增:滑动及解锁控件的endpoint状态变量<br />
+					&ltEndPoint name="end1" ...&gt <br />
+					#end1.state   0: normal  1:pressed 2:reached<br />
+				</add>
+				</p>
+			</div>
+				
+			<hr/>
+			<div id="content">
+				<h4>按钮部件</h4>
+				<a name="button">
+				<p class="part">
+<listing>
+按钮部件可以接收点击，双击等事件，并可根据trigger的定义来控制界面上其他元素.
+按钮部件也可以将事件传递给界面上其他元素，来使其他元素响应用户在锁屏界面上的操作.
+
+* Button属性: &ltButton name="" x="" y="" w="" h="" listener=""&gt
+	 name: 按钮的控制对象通过name来指定.
+	 x, y, w, h: 指定了按钮区域.
+	 listener: 指定该按钮的事件要传给哪个元素.
+* 一个Button可以有若干个trigger，trigger定义了按钮动作引发相关的操作，如控制某元素的属性
+   Trigger属性: &ltTrigger action="" target="" property="" value=""/&gt
+	action:  按钮动作： down (按下), up (抬起), double  (双击), long (长按)
+	target: 控制目标名
+	property: 属性名，目前支持：visibility   以后会增加其他属性控制.
+	value: 属性值，目前针对boolean有:true, false, toggle
+</listing>	
+<pre>
+&ltButton&gt
+   //可以指定任意个trigger，也可以不指定。
+   &ltTriggers&gt
+      &ltTrigger/&gt
+      &ltTrigger/&gt
+   &lt/Triggers&gt		
+   //  按钮正常状态，可以包含任意界面元素，如Image Text等，可以不指定
+   注意： Button中 Image的坐标和Button自己的坐标是独立的，都是相对于Button的父元素。
+   &ltNormal&gt
+      &ltImage/&gt
+      &ltText/&gt
+      ...
+   &lt/Normal&gt
+   //  按钮按下状态，可以包含任意界面元素，如Image Text等，也可以不指定，如果指定了
+   //normal状态，则显示normal状态元素。
+   &lt;Pressed&gt
+      &ltImage/&gt
+      &ltText/&gt
+      ...
+   &lt/Pressed&gt
+&lt/Button&gt
+</pre>
+
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>音乐部件</h4>
+				<a name="musicControl">
+				<p class="part">
+<listing>
+指定名称,显示与否可以由另一个按钮控制，比如双击.
+* MusicControl属性:
+	name: 指定的名称
+	autoShow: true/false 如果进入锁屏是在播放音乐,是否自动显示MusicControl.
+	music_state: 数字, 播放状态 0停止 1播放
+	visibility 数字, 0=false 1=true 
+	包含4个Button和1个Text,且name分别为指定的名称.可以包含其他任意界面元素如Image等.
+<add>
+新增：音乐控件支持歌名和歌手文字分开
+&ltMusicControl name="music_control"  /&gt
+引用歌名： @music_control.title
+引用歌手：@music_control.artist
+</add></listing>
+<pre>
+&ltMusicControl name="music_control" x="" y=""&gt
+   //专辑封面，和普通Image一样除了图片是绑定到专辑封面的，可以指定大小，加Mask等。
+   &ltImage name="music_album_cover"/&gt
+   //歌名和歌手显示文字 
+   &ltText name="music_display"/&gt
+   //上一首按钮
+   &ltButton name="music_prev"/&gt
+   //下一首按钮
+   &ltButton name="music_next"/&gt
+   //播放按钮
+   &ltButton name="music_play"/&gt
+   //暂停按钮
+   &ltButton name="music_pause"/&gt
+&lt/MusicControl&gt
+</pre>
+ 
+<pre>
+例子：&lt!-- 双击控制音乐控制显示隐藏 --&gt
+&ltButton x="178" y="529" w="126" h="126"&gt
+   &ltTriggers&lt
+      &ltTrigger action="double" target="music_control" property="visibility" value="toggle"/&lt
+   &lt/Triggers&lt
+&lt/Button&lt
+</pre>
+					
+<pre>
+&ltMusicControl x="0" y="300" name="music_control" visibility="false"&gt
+   &ltImage name="music_album_cover" x="240" y="40" alpha="150" align="center" alignV="center" /&gt
+   &lt!-- 背景图--&gt
+   &ltImage src="music_bg.png" x="40" y="0" alpha="100" /&gt
+   &lt!-- Text新增自动滚动功能，如果制定了宽度和滚动速度marqueeSpeed，在文字超过宽度的时候会自动滚动显示  --&gt
+   &ltText name="music_display" x="240" y="10" w="300" marqueeSpeed="30" size="24" color="#FFFFFF" 
+   alpha="150" align="center"/&gt
+   &ltButton name="music_prev" x="40" y ="40" w="108" h="84"&gt
+      &ltNormal&gt
+         &ltImage src="music_previous_n.png" x="40" y="40" /&gt
+      &lt/Normal&gt
+      &lt;Pressed&gt
+         &ltImage src="music_previous_p.png" x="40" y="40" /&gt 
+      &lt/Pressed&gt
+   &lt/Button&gt
+ 
+   &ltButton name="music_next" x="332" y ="40" w="108" h="84"&gt
+      &ltNormal&gt
+         &ltImage src="music_next_n.png" x="332" y="40" /&gt
+      &lt/Normal&gt
+      &lt;Pressed&gt
+         &ltImage src="music_next_p.png" x="332" y="40" /&gt
+      &lt/Pressed&gt
+   &lt/Button&gt
+  
+   &ltButton name="music_play" x="186" y ="40" w="108" h="84"&gt
+      &ltNormal&gt
+         &ltImage src="music_play_n.png" x="186" y="40" /&gt
+      &lt/Normal&gt
+      &lt;Pressed&gt
+         &ltImage src="music_play_p.png" x="186" y="40" /&gt
+      &lt/Pressed&gt
+   &lt/Button&gt
+ 
+   &ltButton name="music_pause" x="186" y ="40" w="108" h="84"&gt
+      &ltNormal&gt
+         &ltImage src="music_pause_n.png" x="186" y="40" /&gt
+            &lt/Normal&gt
+         &lt;Pressed&gt
+            &ltImage src="music_pause_p.png" x="186" y="40" /&gt
+         &lt/Pressed&gt
+   &lt/Button&gt
+&lt/MusicControl&gt
+</pre>
+			
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>音量调节变量</h4>
+				<a name="volume">
+				<p class="part">
+					#volume_level 现在音量   #volume_level_old 调节之前的音量  取值：   1-15   根据二者比较判断是增大还是减小<br />
+					#volume_type<br />
+					//    STREAM_VOICE_CALL = 0;<br />
+					//    /* The audio stream for system sounds */<br />
+					//    STREAM_SYSTEM = 1;<br />
+					//    /* The audio stream for the phone ring and message alerts */<br />
+					//    STREAM_RING = 2;<br />
+					//    /* The audio stream for music playback */<br />
+					//    STREAM_MUSIC = 3;<br />
+					//    /* The audio stream for alarms */<br />
+					//    STREAM_ALARM = 4;<br />
+					//    /* The audio stream for notifications */<br />
+					//    STREAM_NOTIFICATION = 5;<br />
+					//    /* @hide The audio stream for phone calls when connected on bluetooth */<br />
+					//    STREAM_BLUETOOTH_SCO = 6;<br />
+					//    /* @hide The audio stream for enforced system sounds in certain countries (e.g camera in Japan) */<br />
+					//    STREAM_SYSTEM_ENFORCED = 7;<br />
+					//    /* @hide The audio stream for DTMF tones */<br />
+					//    STREAM_DTMF = 8;<br />
+					//    /* @hide The audio stream for text to speech (TTS) */<br />
+					//    STREAM_TTS  = 9;<br />
+					//    /* @hide The audio stream for FM */<br />
+					//    STREAM_FM   = 10;<br />
+					一般锁屏下只能调 music   3<br />
+					#volume_type>=0 表示正在调节音量，调节完毕后值为-1 可根据这个显示或隐藏音量显示<br />
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>content privider</h4>
+				<a name="contentPrivider">
+				<p class="part">
+					content provider支持where的格式化：<br />
+					where="" whereFormat="" whereParas=""<br />
+					content provider 支持依赖关系，即某个ContentProviderBinder查询结束后获取的变量作为下一个ContentProviderBinder查询的参数<br />
+					&ltContentProviderBinder name="name1" dependency="name2"&gt <br />
+					&ltContentProviderBinder name="name2" &gt <br />
+					name2查询结束后会触发name1的查询，name1的查询可以使用name2的变量。并且如果name2数据发生变化重新查询后，会触发name1的重新查询。<br />
+					<br />
+					content provider提供了查询应用程序信息的通用接口，定义了新的xml代码来查询content provider，并查询到的信息绑定到变量上，用来显示第三方应用程序的信息，只要第三方应用提供相应的content provider。比如可以显示天气信息，邮件，待办事项，便签，等等，你也可以写一个应用程序查询任何你想要的信息并通过content provider来提供给锁屏使用。
+					
+<pre>
+&ltVariableBinders&gt
+   &ltContentProviderBinder uri="content://sample/test" c uriFormat="" uriParas="" 
+   columns="col1,col2" where="" args="" order="" countName="count_name"&gt
+      &ltVariable name="variable_name1" type="int" column="col1" row="0"/&gt
+      &ltVariable name="variable_name2" type="string" column="col2" row="0"/&gt
+   &lt/ContentProviderBinder&gt
+ &lt/VariableBinders&gt
+</pre>
+
+					VariableBinders:  定义各种变量绑定到的源，目前仅支持content provider。<br />
+					ContentProviderBinder: 定义一个content provider源和绑定到它上面的变量<br />
+					uri: content provider uri, 指定选用哪个content provider<br />
+					uriFormat: 如果uri需要添加变量，可以用格式化，需要和uriParas一起使用<br />
+					uriParas: 同Text element 的格式<br />
+					columns: 需要查询的列名，用逗号分隔<br />
+					where: 查询条件，同 SQL<br />
+					args: "where" 的参数.<br />
+					order: 排序条件， 同 SQL<br />
+					countName: 将查询结构数量绑定到该变量名<br />
+					Variable: 定一个绑定变量<br />
+					name: 变量名<br />
+					type: content provider中的数据类型： string/double/float/int/long<br />
+					column: 变量绑定到的列的名称.<br />
+					row: 变量绑定到的行数，默认为0.<br />
+				
+				
+<pre>
+&lt!--从谷歌资讯天气查询天气信息--&gt
+&lt!-- content provider binder for google weather --&gt
+&ltVariableBinders&gt
+   &ltContentProviderBinder 
+      uriFormat="content://com.google.android.apps.genie.geniewidget.weather/weather/current/%d" 
+      uriParas="#time_sys"
+      columns="iconResId,location,temperature,lowTemperature,highTemperature,description"
+      countName="hasweather"&gt
+      &ltVariable name="weather_id" type="int" column="iconResId"/&gt
+      &ltVariable name="weather_location" type="string" column="location"/&gt
+      &ltVariable name="weather_temperature" type="int" column="temperature"/&gt
+      &ltVariable name="weather_lowTemperature" type="int" column="lowTemperature"/&gt
+      &ltVariable name="weather_highTemperature" type="int" column="highTemperature"/&gt
+      &ltVariable name="weather_description" type="string" column="description"/&gt
+   &lt/ContentProviderBinder&gt
+&lt/VariableBinders&gt
+
+&lt!-- weather info display --&gt
+&ltText visibility="#hasweather"  x="240" y="60" w="360" size="24" color="#FFFFFF" alpha="200" 
+        align="center" format="%s   %s   %d℃" 
+        paras="@weather_location,@weather_description,#weather_temperature" /&gt
+&ltText visibility="#hasweather*not(isnull(#weather_lowTemperature))*not(isnull(#weather_highTemperature))" 
+        x="240" y="85" w="360" size="22" color="#FFFFFF" alpha="200" align="center"
+        format="%d℃ / %d℃" paras="#weather_lowTemperature,#weather_highTemperature"/&gt
+&ltText visibility="#hasweather*isnull(#weather_lowTemperature)*not(isnull(#weather_highTemperature))" 
+        x="240" y="85" w="360" size="22" color="#FFFFFF" alpha="200" align="center"
+        format="--℃ / %d℃" paras="#weather_highTemperature"/&gt
+&ltText visibility="#hasweather*not(isnull(#weather_lowTemperature))*isnull(#weather_highTemperature)" 
+        x="240" y="85" w="360" size="22" color="#FFFFFF" alpha="200" align="center"
+        format="%d℃ / --℃" paras="#weather_lowTemperature" /&gt
+		
+&ltImage src="weather.png" visibility="#hasweather" x="240" y="100" srcid="#weather_id" align="center"&gt
+   &ltPositionAnimation&gt
+      &ltPosition x="-10" y="0" time="1000"/&gt
+      &ltPosition x="10" y="0" time="3000"/&gt
+      &ltPosition x="0" y="0" time="4000"/&gt
+   &lt/PositionAnimation&gt
+&lt/Image&gt
+</pre>
+					天气id列表：<br />
+					weather_chance_of_rain = 2130837536;<br />
+					weather_chance_snow = 2130837540;<br />
+					weather_chance_storm = 2130837544;<br />
+					weather_clear = 2130837556;<br />
+					weather_cloudy = 2130837560;<br />
+					weather_flurries = 2130837564;<br />
+					weather_fog = 2130837568;<br />
+					weather_heavy_rain = 2130837572;<br />
+					weather_icy_sleet = 2130837576;<br />
+					weather_mist = 2130837583;<br />
+					weather_partly_cloudy = 2130837587;<br />
+					weather_rain = 2130837600;<br />
+					weather_snow_rain = 2130837606;<br />
+					weather_snow = 2130837608;<br />
+					weather_sunny = 2130837612;<br />
+					weather_thunderstorm = 2130837617;<br />
+					weather_unknown = 2130837621;<br />
+					weather_windy = 2130837626;<br />
+					
+	<pre>
+	//查询MIUI便签内容，显示第一条便签内容和修改时间
+	&ltVariableBinders&gt
+	   &ltContentProviderBinder uri="content://notes/note" columns="modified_date,snippet" 
+	   order="modified_date DESC" countName="note_count"&gt
+		  &ltVariable name="note_date1" type="long" column="modified_date" row="0"/&gt
+		  &ltVariable name="note_snippet1" type="string" column="snippet" row="0"/&gt
+	   &lt/ContentProviderBinder&gt
+	&lt/VariableBinders&gt
+	   &ltDateTime x="300" y="50" color="#ffffffff" visibility="#note_count" value="#note_date1" 
+	   format="yyyy年MMMMdd日 hh:mm"/&gt     
+	   &ltText x="5" y="180" w="450" color="#ffffffff" visibility="#note_count" size="18" marqueeSpeed="60" 
+	   text="@note_snippet1"/&gt
+	</pre>
+					查询未接来电的参数<br />
+					uri ="content://call_log/calls";<br />
+					columns = "_id,number"<br />
+					where = "type=3 AND new=1";<br />
+			</p>
+			</div>
+			
+			<hr />
+			<div id="content">
+				<h4>broadcast<add>新增！</add></h4>
+				<a name="broadcast">
+				<p class="part">
+					新增：支持接收broadcast并从中取数据:<br/>
+					name: 变量名   extra：broadcast中的extra名称，type：类型 int string double float long.<br/>
+					支持Trigger，接收到broadcast并更新变量后可触发若干命令<br/>
+<pre>
+	&ltVariableBinders&gt
+		&lt BroadcastBinder name="" action=""&gt
+			&ltVariable name="battery_level" type="int" extra="level"/&gt
+			&ltVariable name="battery_plugged" type="int" extra="plugged"/&gt
+			&ltTrigger>
+				&ltCommand target="" value=""/&gt
+			&lt/Trigger&gt
+		&lt/BroadcastBinder&gt
+	&lt/VariableBinders&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>Triggers<add>新增！</add></h4>
+				<a name="triggers">
+				<p class="part">
+
+<listing>
+Triggers(触发器)下:Trigger
+Trigger下:Command（触发后执行指令）
+Trigger属性:action(触发动作)
+	action用于Button触发的值: down，up，double
+Command属性:
+	target(控制对象的*),value,condition="表达式"(触发条件为真时触发),delay="表达式"(延时指定毫秒后触发)
+Command类型:
+* 系统设置  &ltCommand target=""  value=""/&gt
+	   铃声:target="RingMode" value="normal,silent,vibrate"  可以指定"几个"或"一个"状态，在多个状态间切换
+	   WIFI:target="Wifi" value=""       value值:toggle/on/off
+	   数据:target="Data" value=""       value值:toggle/on/off
+	   蓝牙:target="Bluetooth" value=""  value值:toggle/on/off
+	   USB:target="UsbStorage" value=""  value值:toggle/on/off
+* 属性命令  &ltCommand target="元素.visibility"  value="true/false/toggle" &gt
+            &ltCommand target="元素.animation"  value="play" /&gt	command支持动画播放控制
+* 变量赋值   &ltVariableCommand name=""  expression=""  type="" /&gt   
+		同变量定义&ltVar&gt
+		name：变量名
+		expression：赋值表达式
+* 变量绑定   &ltBinderCommand name=""  command="refresh" /&gt  
+		控制VariableBinder的命令，一般用作触发刷新(更新VariableBinder)
+		&ltContentProviderBinder name="weather"&gt // 天气信息
+		&ltBinderCommand name="weather" command="refresh"/&gt //触发查询天气信息
+* Intent命令  &ltIntentCommand  id="" action="" type="" category="" package="" class="" name="" /&gt
+		属性同EndPoint中的Intent
+* 声音命令(即将支持)   &ltSoundCommand  sound=""  volume=""  keepCur=""  loop="" /&gt   
+		volume 音量,0～1的浮点数； 
+		keepCur 是否保持当前正在播放的声音,默认false； 
+		loop 是否循环播放,默认false。
+**所有的command都可以额外指定以下属性：
+		condition:  触发条件,表达式为真时,触发
+		delay:  延时触发,单位ms
+**目前支持触发器的元素有:
+//按钮触发
+&ltButton&gt
+        &ltTriggers&gt
+                &ltTrigger action=""&gt
+                        &ltCommand   /&gt
+                        ....
+         &lt/Trigger&gt
+        &lt/Triggers&gt
+&lt/Button&gt
+//解锁触发 EndPoint
+&ltEndPoint&gt
+    &ltTrigger&gt
+        &ltCommand  /&gt
+        .....
+    &lt/Trigger&gt
+&lt/StartPoint&gt
+//变量触发
+详见<a href="http://www.miui.com/forum.php?mod=viewthread&tid=820336&page=1&extra=#pid17599095">http://www.miui.com/forum.php?mod=viewthread&tid=820336&page=1&extra=#pid17599095</a>
+</listing>		
+<pre>
+//用按钮实现开关
+//每个Button中可以有若干个Command
+&ltButton x="10" y="10" w="100" h="100"&gt
+   &ltTriggers&gt
+      &ltTrigger action="up"&gt
+         &ltCommand target="Wifi" value="toggle"/&gt
+      &lt/Trigger&gt
+   &lt/Triggers&gt
+   
+   &ltPressed&gt
+      &ltImage x="10" y="10" src="toggle_btn_pressed.png"/&gt
+   &lt/Pressed&gt
+   
+   &ltNormal&gt
+      &ltImage x="10" y="10" src="toggle_btn_normal.png"/&gt
+   &lt/Normal&gt
+&lt/Button&gt
+</pre>
+
+<pre>
+//数据
+&ltCommand target="Data" value="toggle"/&gt
+
+//仅切换到开，用另一个button切换到关
+&ltCommand target="Data" value="on"/&gt
+&ltCommand target="Data" value="off"/&gt
+</pre>
+
+
+<pre>
+//用滑动方式实现开关
+&ltSlider name="switch_usb_mode" bounceInitSpeed="500" bounceAcceleration="1500" alwaysShow="true" 
+visibility="#usb_mode" &gt
+   &ltStartPoint x="0" y="0" w="100" h="100"&gt
+      &ltNormalState&gt
+      &lt/NormalState&gt
+   &lt/StartPoint&gt
+   &lt!-- noUnlock indicates does not unlock when released in reached state, just perform the command  --&gt
+   &ltEndPoint x="340" y="0" w="100" h="100"&gt
+      &lt!-- the same command with those in button  --&gt
+      &ltCommand target="UsbStorage" value="toggle"/&gt
+      &ltPath &gt
+         &ltPosition x="0" y="0" /&gt
+         &ltPosition x="340" y="0" /&gt
+      &lt/Path&gt
+   &lt/EndPoint&gt
+&lt/Slider&gt
+</pre>
+		// switch state 状态变量，仅在添加相应command后才有效<br/>
+		// 0 silent, 1 vibrate, 2 normal<br />
+		#ring_mode<br />
+		// 0 disabled, 1 enabled, 2 problem, 3 half(intermediate)<br />
+		#wifi_state<br />
+		// 0 off, 1 on, 2 half<br />
+		#bluetooth_state<br />
+		// 0 off, 1 on<br />
+		#data_state<br />
+		// 0 disconnected, 1 charge only, 2 storage, 3 intermediate<br />
+		#usb_mode<br />
+		<br />
+		
+<pre>
+//Command支持变量赋值
+//&ltVariableCommand name="test" expression="#test+1" /&gt 
+//name：变量名，expression：赋值表达式
+&ltButton x="0" y="#screenview_y" w="#screen_width" h="#screenview_h"&gt
+   &ltTriggers&gt
+      &ltTrigger action="up"&gt
+         &ltVariableCommand name="gesture_valid" expression="ge(abs(#gesture_offset),80)" /&gt
+         &ltVariableCommand name="ani_begin_x_add" expression="ifelse(lt(#current_screen,#screenview_count-1),#
+	     gesture_offset+#screenview_w,#gesture_offset)"/&gt
+         &ltVariableCommand name="ani_begin_x_dec" expression="ifelse(gt(#current_screen,0),
+	     #gesture_offset-#screenview_w,#gesture_offset)"/&gt
+         &ltVariableCommand name="ani_begin_x" expression="ifelse(#gesture_valid,
+	     ifelse(#gesture_offset,#ani_begin_x_dec,#ani_begin_x_add),#gesture_offset)" /&gt
+         &ltVariableCommand name="touch_x" expression="#touch_begin_x"/&gt
+         &ltCommand target="ani_offset_x.animation" value="play"/&gt
+         &lt/Trigger&gt
+      &lt/Triggers&gt
+&lt/Button&gt
+//command支持动画播放控制
+&ltVar name="ani_offset_x"&gt
+   &ltVariableAnimation&gt
+      &ltAniFrame value="#ani_begin_x" time="0"/&gt
+      &ltAniFrame value="0" time="300"/&gt
+   &ltAniFrame value="0" time="100000000000000"/&gt
+   &lt/VariableAnimation&gt
+&lt/Var&gt
+</pre>
+				</p>
+			</div>
+				
+			<hr />
+			<div id="content">
+				<h4>3D旋转& 缩放<add>新增！</add></h4>
+				<a name="3Dandscale">
+				<p class="part">
+<listing>
+* 所有元素(包括Group)支持旋转，缩放，3D旋转功能.可以减少VirtualScreen的使用，VirtualScreen效率较低.
+* 新增属性：
+	旋转,缩放中心坐标: 由原来的centerX centerY改为 pivotX pivotY;
+	旋转角度: 由angle 改为rotation (兼容原来的写法).
+
+	旋转: 单位为度（一周360）
+	angle="expression"  或 rotation="expression"
+	缩放: 缩放倍数
+	scale="expression" 或 scaleX="expression"  scaleY="expression" 
+	3D旋转：
+	rotationX="expression" 
+	rotationY="expression"
+	rotationZ="expression"
+* 虚拟屏幕元素:
+	&ltVirtualScreen name="virtualscreen"&gt
+	虚拟屏幕元素，它的子元素会绘制在它的图片缓冲区中，它的图片缓冲区可以作为Image的图片源。
+	&ltImage useVirtualScreen="true" src="virtualscreen"&gt
+* Image 3D旋转(所有元素支持旋转):
+	&ltImage angleX="" angleY=""&gt (rotation)
+	指定旋转中心为centerX, centerY (pivotX, pivotY)
+* Image指定源图片区域:
+	&ltImage srcX="" srcY="" srcW="" srcH="" &gt
+</listing>
+
+				</p>
+			</div>
+			
+			<hr />
+			<div id="content">
+				<h4>个性化设置<add>新增！</add></h4>
+				<a name="diy">
+				<p class="part">
+<listing>
+* 每个主题都可以带一个配置描述xml文件，该文件描述了可以个性化配置的项目(也可以设置程序快捷方式).
+  文件名：config.xml 和manifest.xml 放在同一个目录下.
+<pre>
+// 根节点
+&ltConfig&gt  
+    // 设置组  text 设置组名称
+&ltGroup text="日期时间"&gt  
+// 设置项目 
+//text：设置项名称,显示在设置界面中的文本
+//summary：设置项详细说明 
+//id：设置项对应的变量名称 
+//default：缺省值
+设置项目会把设置值绑定到百变锁屏的变量中，在manifest.xml中可以引用这些设置变量
+// 开关，
+        &ltCheckBox text="" summary="" id="show_date" default="1"/&gt
+// 文字输入
+        &ltStringInput text="" summary="" id="date_format" default="k:mm"/&gt
+// 文字选择
+        &ltStringChoice text="" summary="" customizable="true" id="time_format"&gt
+//文字选择项目 value变量值 text界面显示文字
+            &ltItem value="hh:mm" text="12小时"/&gt
+            &ltItem value="kk:mm" text="24小时"/&gt
+        &lt/StringChoice&gt
+//数字选择
+        &ltNumberChoice text="" summary="" id=""&gt
+//数字选择项目 value数值 text界面显示文字
+            &ltItem value="0" text="模式1"/&gt
+            &ltItem value="1" text="模式2"/&gt
+        &lt/NumberChoice&gt
+        //数字输入
+&ltNumberInput text="" summary="" id="" default=""/&gt
+
+// 选择快捷方式   id： 对应 EndPoint 中Intent的id，表示设置相同id的intent 快捷方式
+&ltAppPicker text="" id=""/&gt
+</pre>
+实际例子:
+<pre>
+config.xml 
+&ltConfig&gt
+    &ltGroup text="日期时间"&gt
+        &ltCheckBox text="显示日期" id="show_date" default="1"/&gt
+        &ltStringInput text="日期格式" summary="" id="date_format" default="yyyy年M月d日 EEEE"/&gt
+        &ltNumberInput text="日期文字大小" id="text_size_date" default="14"/&gt
+        &ltNumberInput text="日期垂直位置" id="date_position_y" default="0"/&gt
+    &lt/Group&gt
+    &ltGroup text="快捷方式"&gt
+        &ltAppPicker text="左边快捷方式" id="left_task"/&gt
+        &ltAppPicker text="右边快捷方式" id="right_task"/&gt
+    &lt/Group&gt
+&lt/Config&gt
+</pre>
+manifest.xml  代码片段:
+	引入一个新元素&ltVar&gt该元素不是可显示的界面元素，只用做中间变量简化表达式
+	name变量名 
+	expression对应的表达式 
+	type=“string” 或“number” 对应字符串变量或数值变量 
+	const="true"变量值只会在初始化时计算一次，以后不会更新="false"会不断重新计算.
+	如果表达式引用到的变量在初始化后不会变化，请使用const=true，提高效率.
+<pre>
+    &ltVar name="show_date" expression="ifelse(isnull(#show_date),1,#show_date)" type="number" const="true"/&gt
+    &ltVar name="text_size_date" expression="ifelse(isnull(#text_size_date),18,#text_size_date)" type="number" const="true"/&gt
+    &ltVar name="date_format" expression="ifelse(isnull(@date_format),'MMMMd日 EEEE', @date_format)" type="string" const="true"/&gt
+
+    &ltDateTime visibility="#show_date" x="#screen_width/2" y="#screen_height-260+49+#time_panel.actual_h+#unlocker.move_y+#date_position_y" 
+		align="center" color="#AAEEEEEE" size="#text_size_date" format="@date_format"/&gt
+
+	// 选择程序快捷方式
+    &ltUnlocker name="unlocker" bounceInitSpeed="1000"&gt
+        &ltStartPoint x="0" y="#screen_height-275" w="#screen_width/4" h="120"&gt
+
+        &lt/StartPoint&gt
+
+        &ltEndPoint x="0" y="#screen_height-150" w="#screen_width/4" h="300"&gt
+            &ltIntent id="left_task" action="android.intent.action.VIEW" type="vnd.android.cursor.dir/calls"/&gt
+        &lt/EndPoint&gt
+    &lt/Unlocker&gt
+
+   &ltUnlocker name="unlocker" bounceInitSpeed="1000"&gt
+        &ltStartPoint x="#screen_width*3/4" y="#screen_height-275" w="#screen_width/4" h="120"&gt
+        &lt/StartPoint&gt
+
+        &ltEndPoint x="#screen_width*3/4" y="#screen_height-150" w="#screen_width/4" h="300"&gt
+        &ltIntent id="right_task" action="android.intent.action.MAIN" type="vnd.android-dir/mms-sms" category="android.intent.category.DEFAULT"/&gt
+        &lt/EndPoint&gt
+    &lt/Unlocker&gt
+</pre>
+</listing>	
+				</p>
+			</div>
+			
+			<hr />
+			<div id="content">
+				<h4>Webservice<add>新增！</add></h4>
+				<a name="webservice">
+				<p class="part">
+<listing>
+支持Webservice查询:
+WebServiceBinder属性：
+	name: 名称，用来在系统中保存查询结果
+	uri: webservice api 地址
+	params: 参数，格式： "参数名1:值1,参数名2:值2,参数名3:值3"
+	updateInterval: 查询间隔，单位：秒 
+	updateIntervalFail：查询失败后的重试时间，单位秒
+
+Variable属性：
+    name：绑定参数名
+    type：string  number   参数的类型
+    xpath: 将返回xml结果中xpath指定的内容绑定到该参数
+    persist： 参数值是否在退出锁屏后保存，下次进入锁屏时读取出来，避免重复联网查询
+<pre>
+&ltWebServiceBinder name="MyWeather" uri="http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName" 	
+	params="theCityName:北京" updateInterval="3600" updateIntervalFail="60"&gt
+	&ltVariable name="weather_city" type="string" xpath="/ArrayOfString/string[2]" persist="true"/&gt
+&lt/WebServiceBinder&gt
+</pre>
+</listing>
+
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>动态帧率（大大降低锁屏的耗电）</h4>
+				<a name="framerate">
+				<p class="part">
+					1. 简单用法<br />
+					除了原来的frameRate属性控制普通状态下的帧率外， 还支持分别设置充电、电量低、充满电状态下的帧率，以方便的控制这些状态下的帧率，达到省电的目标。
+					比如普通状态下没有动画，帧率可以设为0，充电状态下有动画，帧率可以设为30，以显示平滑的动画。普通状态下就可以非常省电<br />
+					例如：<br />
+					frameRateCharging="30"  frameRateBatteryLow="20"  frameRateBatteryFull="1"
+					<br />
+					<br />
+					2. 高级用法
+					为了在xml描述语言中根据时间线指定不同帧率，新增一种element，叫做FramerateController，此元素和其他界面元素一样可以被添加到各个容器中，此元素包含一个帧率控制时间线，指定在一定的时间使用一定的帧率。
+					xml看起来如下：<br />
+<pre>
+&ltFramerateController visibility="#music_control.visibility" loop="true"&gt
+    &ltControlPoint time="0" frameRate="20"/&gt
+    &ltControlPoint time="1000" frameRate="0"/&gt
+    &ltControlPoint time="3000"/&gt
+&lt/FramerateController&gt
+</pre>
+					此元素会控制它所在容器下的时间线的帧率，即，所有该容器下的元素的动画都会与此元素指定的帧率变化同步。<br/>
+					动态帧率:<a href="http://www.miui.com/thread-567030-1-1.html">http://www.miui.com/thread-567030-1-1.html</a>
+				</p>
+			</div>
+			
+			
+			<hr/>
+			<div id="content">
+				<h4><add>update!公告</add></h4>
+				<a name="update">
+				<p class="part">
+					<add>2013.8.1更新时间</add>
+				</p>
+			</div>
+			
+</div>

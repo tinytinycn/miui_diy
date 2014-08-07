@@ -1,0 +1,22 @@
+* 所有元素(包括Group)支持旋转，缩放，3D旋转功能.可以减少VirtualScreen的使用，VirtualScreen效率较低.
+* 新增属性：
+	旋转,缩放中心坐标: 由原来的centerX centerY改为 pivotX pivotY;
+	旋转角度: 由angle 改为rotation (兼容原来的写法).
+
+	旋转: 单位为度（一周360）
+	angle="expression"  或 rotation="expression"
+	缩放: 缩放倍数
+	scale="expression" 或 scaleX="expression"  scaleY="expression" 
+	3D旋转：
+	rotationX="expression" 
+	rotationY="expression"
+	rotationZ="expression"
+* 虚拟屏幕元素:
+	&ltVirtualScreen name="virtualscreen"&gt
+	虚拟屏幕元素，它的子元素会绘制在它的图片缓冲区中，它的图片缓冲区可以作为Image的图片源。
+	&ltImage useVirtualScreen="true" src="virtualscreen"&gt
+* Image 3D旋转(所有元素支持旋转):
+	&ltImage angleX="" angleY=""&gt
+	旋转中心为centerX, centerY
+* Image指定源图片区域:
+	&ltImage srcX="" srcY="" srcW="" srcH="" &gt

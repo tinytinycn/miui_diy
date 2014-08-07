@@ -1,0 +1,53 @@
+<head>
+<link title="style" href="css/index.css" type="text/css" rel="stylesheet"/>
+<title>百变壁纸 by xzh&trade;</title>
+</head>
+<div id="navigation">
+			<li class="function">基本功能</li>
+			<a href="#manifest"><li>manifest.xml</li></a>
+			<a href="#wallpaper"><li>百变壁纸</li></a>
+			<a href="#update"><li><add>update!</add></li></a>
+			<br />
+			<li class="function"><a href="index.html"><b>返回【主页】</b></a></li>
+			<a href=""><li></li></a>
+</div>
+
+<div id="main_content">
+			<h2>MIUI百变壁纸教程</h2>
+			<p>百变壁纸是一种动态壁纸，和android原生动态壁纸不同的是：它的制作成本非常低.<br/>百变时代来临，你不再需要写一大堆看起来就头大的java代码，很简单，只需要切出漂亮的图图，加上简单的脚本，百变壁纸就华丽丽的诞生啦～～<br/>
+			百变壁纸采用了跟百变锁屏一样的MAML框架！所以，你只要会做百变锁屏，就具备了制作百变壁纸的能力啦！<br/>是不是很令人激动，是不是迫不及待の开始构思各种灵动飘逸的桌面了，那就开启激动人心的百变之旅吧！！</p>
+			
+			<hr/>
+			<div id="content">
+				<h4>manifest.xml</h4>
+				<a name="manifest">
+				<p class="part">
+<listing>
+miwallpaper/mainfest.xml 目录下,manifest.xml文件是描述脚本.
+* 除了锁屏相关的Unlocker等部件不支持外，别的与百变锁屏一模一样.
+* 另外，如果要实现元素跟随手指滑动的效果，需要借助#wallpaper_offset_pixel_x，#wallpaper_offset_x
+	wallpaper_offset_pixel_x：偏移的像素数  （0 ～ -1*屏宽）
+	wallpaper_offset_x：偏移百分比 （0 ~ 1.0）
+	二者关系：#wallpaper_offset_x * 屏宽 = -1*#wallpaper_offset_pixel_x
+	滑动时:在第一屏，wallpaper_offset_pixel_x = 0, wallpaper_offset_x = 0; 
+	滑到最后一屏，wallpaper_offset_pixel_x = -1*屏宽, wallpaper_offset_x = 1.0
+</listing>	 
+<pre>
+&lt?xml version="1.0" encoding="utf-8"?&gt
+&ltMiWallpaper&gt
+         //脚本内容
+&lt/MiWallpaper&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4><add>update!公告</add></h4>
+				<a name="update">
+				<p class="part">
+					<add>2013.8.1更新时间</add>
+				</p>
+			</div>
+			
+</div>

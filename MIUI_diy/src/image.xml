@@ -1,0 +1,50 @@
+<listing>
+图片部件用来在锁屏界面上显示一个图片.
+* Image属性：
+	x,y : 相对于屏幕左上角的坐标
+	w,h : 宽和高
+	centerX, centerY : 旋转中心
+	angle : 旋转角度，一周360度
+	src : 图片名称
+	srcid : 图片序列后缀数字，一般用变量表示，可以根据变量显示不同的图片，如果src="pic.png" srcid="1" 则最后会显示图片 "pic_1.png"
+	alpha : 透明度 0-255, 小于等于0不显示
+	antiAlias: true/false  抗锯齿，如果为true图片在变形旋转时不会有锯齿，但是速度会慢
+	srcExp:图片源表达式
+	srcFormat:图片源格式
+	srcForamtExp:图片源格式表达式
+	srcParas:图片源参数
+		&ltImage x="0" y="#screen_height-323" src="bottom_bg.png"/&gt 
+* 图片实际位置变量,可获得部件在动画时的实际位置：
+actual_x actual_y actual_w actual_h
+#img.actual_x  #img.actual_y
+<add>
+新增: Image元素增加图片大小属性  bmp_width, bmp_height
+&ltImage name="img" src="test.png"/&gt
+#img.bmp_width #img.bmp_height
+</add>
+* 图片显示数字的部件 &ltImageNumber number="" src=""&gt
+	number是要显示的数字表达式 
+	src是图片源的文件名，支持SourceAnimation 
+	如果src="number.png"  则会使用 number_0.png number_1.png ... 图片文件来绘制数字。类似Time部件
+</listing>
+<pre>
+//srcExp:图片源表达式
+&ltImage x="210" y="-26" align="center" srcExp="'weather/weather_' + #weather_id + @icon_suffix + '.png'"/&gt
+</pre>		
+	<add>
+	* 新增：Image元素支持截取锁屏界面以下的系统界面<br />
+	&emsp;&ltImage name="homescreen" srcType="Screenshot"/&gt <br />
+	&emsp;命令控制重新截屏<br />
+	&emsp;&ltCommand target="homescreen.animation" value="play"/&gt <br />
+	&emsp;可以用来做一些效果，比如把锁屏下面的桌面从左到右拖动出现 <br />
+	</add>
+	<br />
+	<add>
+	新增：图片3D旋转支持 z轴高度: centerZ ; z轴旋转: angleZ  <br />
+	&emsp;&ltImage ... centerZ="250*2" angleZ="60" /&gt <br />
+	</add>
+	<br />
+	<add>
+	新增：支持获取应用程序图标: <br/>
+	&emsp;&emsp;<a href="http://www.miui.com/thread-673303-1-1.html">http://www.miui.com/thread-673303-1-1.html</a>
+	</add>

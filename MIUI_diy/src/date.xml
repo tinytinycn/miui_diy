@@ -1,0 +1,27 @@
+显示指定格式日期.
+DateTime属性:
+	format: 支持标准日期格式, 另外增加农历: NNNN
+	&ltDateTime x="" y="" color="" size="" align="" alignV="" format=""&gt 
+	  &emsp;&ltPositionAnimation/&gt 
+	&ltDateTime&gt 
+<pre>
+//格式样例
+九月：
+M -> 9
+MM -> 09
+
+7分钟:
+m -> 7
+mm -> 07
+mmm -> 007
+mmmm -> 0007
+
+1970年4月6日 3:23am
+"yyyy/MM/dd h:mmaa" -> "1970/04/06 3:23am"
+"M月d日 h:mmaa" -> "4月6日 3:23am"
+"E" -> "周三"
+"EEEE" -> "星期三"
+"纪念日: M/d" -> "纪念日: 4/6"
+
+24小时: "kk:mm" -> "13:34"
+</pre>	

@@ -1,0 +1,32 @@
+body{
+	background-image:url(../img/b1.jpg);
+	font-family:  Verdana, Arial, '宋体';
+	font-size: 20pt;
+	margin:10px;
+	line-height:20px;
+	text-align:center;
+}
+
+h1{
+	color: #F5F5F5;
+}
+
+h2{
+	text-align:center;
+	color: #F5F5F5;
+	font-family:  Verdana, Arial, '宋体';
+}
+p{	
+	color:white;
+	text-align:center;
+	font-size:10pt;
+	font-family:  Verdana, Arial, '宋体';
+	padding-top:2px;
+}
+
+a{
+	color: #F5F5F5;
+	text-decoration: none;
+	list-style: none;
+}
+

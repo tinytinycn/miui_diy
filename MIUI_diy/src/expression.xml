@@ -1,0 +1,25 @@
+支持加减乘除取模括号和函数
+* 加减乘除取模 : + - * / %  
+* 支持函数:sin, cos, tan, asin, acos, atan, sinh, cosh, sqrt, abs, min, max  
+		len(数字)  给定数字位数 len(1234)=4
+		digit(数字, 第几位) 取给定数字的第几位 digit(1234, 2) = 3
+		round() 四舍五入取整  int()向下取整
+		eq(x, y) // x==y ? 1 : 0
+		ne(x, y) // x!=y ? 1 : 0
+		ge(x, y) // x>=y ? 1 : 0
+		gt(x, y) // x>y ? 1 : 0
+		le(x, y) // x<=y ? 1 : 0
+		lt(x, y) // x<y ? 1 : 0
+		isnull(x) // x==null ? 1 : 0 // 是否表达式包含空变量，通常用于判断绑定的变量是否查到数据
+		not(x) x>0 ? 0 : 1
+		ifelse(x, y, z) // x>0 ? y : z
+		ifelse(x1, y1, x2, y2, ... , z)
+		if x1>0 return y1; else if x2>0 return y2; ... ; else return z
+* + 可以拼接字符串,一些函数也可以支持字符串.
+* isnull 可以判断字符串变量是否为空.
+* ifelse 可以选择字符串.
+* eqs(@string1, @string2) 字符串比较函数
+* 元素可见性支持表达式
+	visibility=“表达式”  <=0 不可见  >0可见
+	Image, Time, Text 属性 align= left, center, right   坐标点水平对齐方式
+	Image, Time 属性 alignV= top, center, bottom   坐标点垂直对齐方式

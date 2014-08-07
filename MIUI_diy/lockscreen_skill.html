@@ -1,0 +1,434 @@
+<head>
+<link title="style" href="css/index.css" type="text/css" rel="stylesheet"/>
+</head>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="lockscreen_content.html"><b>返回【百变锁屏】</b></a>
+<div id="navigation">
+			<li class="function">技巧帖</li>
+			<a href="#t1"><li>锁屏天气</li></a>
+			<a href="#t2"><li>未来天气</li></a>
+			<a href="#t3"><li>命令动画</li></a>
+			<a href="#t4"><li>intent</li></a>
+			<a href="#t5"><li>面板panel</li></a>
+			<a href="#t6"><li>Group</li></a>
+			<a href="#t7"><li>黑/白天变化</li></a>
+			<a href="#t8"><li>图片显示数字</li></a>
+			<a href="#t9"><li>解锁命令</li></a>
+			<a href="#t10"><li>桌面图标变形</li></a>
+			<a href="#t11"><li></li></a>
+			<a href="#t12"><li></li></a>
+			<a href="#update"><li><add>update!</add></li></a>
+</div>
+
+<div id="main_content">
+			<h2>MIUI百变锁屏技巧</h2>
+			<p>********************************</p>
+			
+			<hr/>
+			<div id="content">
+				<h4>锁屏天气</h4>
+				<a name="t1">
+				<p class="part">
+<listing>
+属性:
+	city_name string 城市名
+	publish_time long 发布时间 
+	temperature string 温度 
+	temperature_range string 温度区间 
+	description string 天气状况描述 
+	wind string 风 
+	humidity string 湿度 
+	weather_type int
+天气与weather_id对应如下：
+	0; // 晴 
+	1; // 多云 
+	2; // 阴 
+	3; // 雾 
+	4; // 特大暴雨 
+	5; // 大暴雨 
+	6; // 暴雨 
+	7; // 雷阵雨 
+	8; // 阵雨 
+	9; // 大雨 
+	10; // 中雨 
+	11; // 小雨 
+	12; // 雨夹雪 
+	13; // 暴雪 
+	14; // 阵雪 
+	15; // 大雪 
+	16; // 中雪 
+	17; // 小雪 
+	18; // 强沙尘暴 
+	19; // 沙尘暴 
+	20; // 沙尘 
+	21; // 扬沙 
+	22; // 冰雹 
+	23;// 浮尘  
+	24;// 霾
+                
+	0<=aqi<50 优
+	50<=aqi<100 良
+	100<=aqi<150 轻度污染
+	150<=aqi<200 中度污染
+	200<=aqi<300 重污染
+	300<=aqi<=500 严重污染
+	
+	其他指数：单位μg/?
+	pm25: 入肺颗粒物
+	pm10: 可吸入颗粒物
+	so2:  二氧化硫	
+</listing>	 
+<pre>
+&ltVariableBinders&gt
+	&lt!-- 天气 --&gt
+	&ltContentProviderBinder name="weather" uri="content://weather/weather" 		
+		columns="city_id,city_name,publish_time,temperature,temperature_range,description,wind,humidity,weather_type" 		
+		countName="hasweather"&gt
+			&ltVariable name="city_id" type="string" column="city_id"/&gt
+			&ltVariable name="weather_id" type="int" column="weather_type"/&gt
+			&ltVariable name="weather_location" type="string" column="city_name"/&gt
+			&ltVariable name="weather_temperature" type="int" column="temperature"/&gt
+			&ltVariable name="weather_temperature_range" type="string" column="temperature_range"/&gt
+			&ltVariable name="weather_description" type="string" column="description"/&gt
+			&ltVariable name="weather_wind" type="string" column="wind"/&gt
+			&ltVariable name="weather_publish_time" type="long" column="publish_time"/&gt
+	&lt/ContentProviderBinder&gt
+
+	&lt!-- 空气质量指数 --&gt
+	&ltContentProviderBinder name="weather_aqi" dependency="weather" 
+		uriFormat="content://weatherinfo/aqi/%s" uriParas="@city_id" 
+		columns="aqi,pm25,pm10,so2,no2,pub_time,src,spot" countName="hasweatherinfo"&gt
+			&ltVariable name="aqi" type="int" column="aqi"/&gt
+			&ltVariable name="pm25" type="int" column="pm25"/&gt
+			&ltVariable name="pm10" type="int" column="pm10"/&gt
+			&ltVariable name="so2" type="int" column="so2"/&gt
+			&ltVariable name="no2" type="int" column="no2"/&gt
+	&lt/ContentProviderBinder&gt
+
+&lt/VariableBinders&gt
+
+	&ltVar name="air_quality" expression="ifelse(ge(#aqi,0)*lt(#aqi,50),'优',ge(#aqi,50)*lt(#aqi,100),'良',
+	ge(#aqi,100)*lt(#aqi,150),'轻度污染',ge(#aqi,150)*lt(#aqi,200),'中度污染',
+	ge(#aqi,200)*lt(#aqi,300),'重度污染',ge(#aqi,300)*le(#aqi,500),'严重污染','获取信息异常')" 
+	type="string"/&gt 
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>未来天气</h4>
+				<a name="t2">
+				<p class="part">
+<listing>
+uri: content://weather/weather 查默认城市的当天天气
+uri: content://weather/daily_weather 查任意城市6天内天气 </listing>
+<pre>
+&lt!-- 天气 --&gt
+    &ltContentProviderBinder name="weather" uri="content://weather/weather" columns="city_id"&gt
+     &ltVariable name="city_id" type="string" column="city_id"/&gt
+     &lt/ContentProviderBinder&gt
+           &ltContentProviderBinder dependency="weather" 
+		   uriFormat="content://weather/daily_weather/%s" uriParas="@city_id" 
+		   columns="city_name,publish_time,temperature,temperature_range,description,wind,humidity,weather_type" 
+		   countName="hasweather"&gt
+  &lt!-- 今天 --&gt
+       &ltVariable name="weather_location" type="string" column="city_name"  row="0"/&gt
+        &ltVariable name="weather_temperature" type="int" column="temperature"  row="0"/&gt
+        &ltVariable name="weather_temperature_range" type="string" column="temperature_range" row="0"/&gt
+        &ltVariable name="weather_description" type="string" column="description"  row="0"/&gt
+        &ltVariable name="weather_wind" type="string" column="wind" row="0"/&gt
+        &ltVariable name="weather_id" type="int" column="weather_type"row="0"/&gt
+  &lt!-- 明天 --&gt
+         &ltVariable name="weather_location1" type="string" column="city_name"  row="1"/&gt
+          &ltVariable name="weather_temperature1" type="int" column="temperature" row="1"/&gt
+          &ltVariable name="weather_temperature_range1" type="string" column="temperature_range" row="1"/&gt
+          &ltVariable name="weather_description1" type="string" column="description"  row="1"/&gt
+          &ltVariable name="weather_wind1" type="string" column="wind" row="1"/&gt
+          &ltVariable name="weather_id1" type="int" column="weather_type" row="1"/&gt
+  &lt!-- 后天 --&gt
+          &ltVariable name="weather_location2" type="string" column="city_name"  row="2"/&gt
+           &ltVariable name="weather_temperature2" type="int" column="temperature" row="2"/&gt
+           &ltVariable name="weather_temperature_range2" type="string" column="temperature_range" row="2"/&gt
+           &ltVariable name="weather_description2" type="string" column="description"  row="2"/&gt
+           &ltVariable name="weather_wind2" type="string" column="wind"  row="2"/&gt
+           &ltVariable name="weather_id2" type="int" column="weather_type"  row="2"/&gt
+ &lt/ContentProviderBinder&gt
+
+&ltGroup x="-20" y="#screen_height-350" &gt
+&lt!-- 今天 --&gt
+        &ltGroup x="0" y="0"&gt
+&lt!-- 天气图标 --&gt
+          &ltImage x="#screen_width-268" y="42" align="center" w="88" h="83" 
+			srcExp="'weather/weather_' + #weather_id + @icon_suffix + '.png'"/&gt
+&lt!-- 日期 --&gt
+           &ltText x="#screen_width-30" y="70" size="22" color="#FFD7D7D7" alpha="250" 
+			format="今天   %d%d.%d%d" paras="(#month+1)/10,(#month+1)%10,#date/10,#date%10" align="right"/&gt
+&lt!-- 城市 --&gt
+            &ltText x="#screen_width-158" y="20" size="30" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_location" align="center"/&gt
+&lt!-- 天气描述 --&gt
+            &ltText x="#screen_width-30" y="100" size="23" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_description" align="right"/&gt
+&lt!-- 当前温度 --&gt
+            &ltText x="#screen_width-161" y="70" size="31" color="#FFD7D7D7" alpha="250" text="℃" align="right"/&gt
+            &ltText x="#screen_width-190" y="70" textExp="ifelse(isnull(#weather_temperature),'~',#weather_temperature)" 
+				size="32" color="#FFD7D7D7" alpha="250" format="%d" paras="#weather_temperature" align="right"/&gt
+&lt!-- 温度区间 --&gt
+            &ltText x="#screen_width-268" y="112" align="center" size="18" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_temperature_range"/&gt
+     &lt/Group&gt
+&lt!-- 明天 --&gt
+        &ltGroup x="0" y="100"&gt
+&lt!-- 天气图标 --&gt
+              &ltImage x="#screen_width-268" y="42" align="center" w="88" h="83" srcExp="'weather/weather_' + #weather_id1 + @icon_suffix1 + '.png'"/&gt
+ &lt!-- 日期 --&gt
+                &ltText x="#screen_width-30" y="70" size="22" color="#FFD7D7D7" alpha="250" 
+				format="明天   %d%d.%d%d" paras="#month1/10,#month1%10,#1tomorrow/10,#tomorrow%10" align="right"/&gt
+&lt!-- 天气描述 --&gt
+                 &ltText x="#screen_width-30" y="100" size="23" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_description1" align="right"/&gt
+&lt!-- 温度区间 --&gt
+                  &ltText x="#screen_width-268" y="112" align="center" size="18" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_temperature_range1"/&gt
+              &lt/Group&gt
+&lt!-- 后天 --&gt
+        &ltGroup x="0" y="100+100"&gt
+&lt!-- 天气图标 --&gt
+         &ltImage x="#screen_width-268" y="42" align="center" w="88" h="83" 
+		 srcExp="'weather/weather_' + #weather_id2 + @icon_suffix2 + '.png'"/&gt
+&lt!-- 日期 --&gt
+          &ltText x="#screen_width-30" y="70" size="22" color="#FFD7D7D7" alpha="250" 
+		  format="后天   %d%d.%d%d" paras="#month2/10,#month2%10,#the_day_after_tomorrow/10,#the_day_after_tomorrow%10" align="right"/&gt
+&lt!-- 天气描述 --&gt
+          &ltText x="#screen_width-30" y="100" size="23" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_description2" align="right"/&gt
+&lt!-- 温度区间 --&gt
+           &ltText x="#screen_width-268" y="112" align="center" size="18" color="#FFD7D7D7" alpha="250" format="%s" paras="@weather_temperature_range2"/&gt
+        &lt/Group&gt
+&lt/Group&gt       </pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>锁屏界面支持点亮屏幕时执行命令如播放动画</h4>
+				<a name="t3">
+				<p class="part">
+<listing>
+在根节点下添加ExternalCommands，并增加响应command。屏幕点亮时系统会发送resume命令，xml只要响应该command就可以做某些操作。
+一般用来播放一段动画。也可以记录关屏时间等，下次点亮屏幕时显示关屏多长时间等（我不知道有什么用，只是举例说明一下可以做到的）
+</listing>
+<pre>
+ &ltExternalCommands&gt
+ &ltTrigger action="resume"&gt
+          &ltCommand target="target.animation" value="play"/&gt
+        &lt/Trigger&gt
+   &ltTrigger action="pause"&gt 
+      &ltVariableCommand name="pause_time" expression="#time_sys"/&gt
+  &lt/Trigger&gt
+&lt/ExternalCommands&gt
+</pre>
+<listing>
+动态widget的屏幕切换动画也是如此实现，切换离开当前屏幕会发送pause命令，切换到当前屏幕会发送resume命令。
+（__root是默认根节点的名字，你也可以改成其他元素如Group或Image等的名字，控制它的动画播放）
+</listing>
+<pre>
+&ltExternalCommands&gt
+	&ltTrigger action="resume"&gt
+	&ltCommand target="__root.animation" value="play"/&gt
+	&lt/Trigger&gt
+	&ltTrigger action="pause"&gt
+	&ltCommand target="__root.animation" value="play"/&gt
+	&lt/Trigger&gt
+&lt/ExternalCommands&gt
+</pre>
+				</p>
+			</div>	
+			
+			<hr/>
+			<div id="content">
+				<h4>intent</h4>
+				<a name="t4">
+				<p class="part">
+<listing>
+
+解锁后到相机，但不是到具体的某个应用，而是系统默认的相机，如果没有选择默认相机，则出现所有安装的相机选择列表。
+&ltIntent action="android.media.action.STILL_IMAGE_CAMERA" category="android.intent.category.DEFAULT"/&gt
+
+同理, 解锁后到音乐
+&ltIntent action="android.intent.action.MUSIC_PLAYER" category="android.intent.category.DEFAULT"/&gt
+</listing>
+				</p>
+			</div>
+
+				<hr/>
+			<div id="content">
+				<h4>panel</h4>
+				<a name="t5">
+				<p class="part">
+<pre>
+    &ltVariableBinders&gt
+         &ltContentProviderBinder 
+            uri="content://weather/weather" 
+            columns="city_name,temperature,temperature_range,description,weather_type"
+            countName="hasweather"&gt
+             &ltVariable name="weather_id" type="int" column="weather_type"/&gt
+             &ltVariable name="weather_location" type="string" column="city_name"/&gt
+             &ltVariable name="weather_temperature" type="int" column="temperature"/&gt
+             &ltVariable name="weather_temperature_range" type="string" column="temperature_range"/&gt
+             &ltVariable name="weather_description" type="string" column="description"/&gt
+         &lt/ContentProviderBinder&gt
+    &lt/VariableBinders&gt
+
+    &lt!-- panel  --&gt
+    &ltVar name="panel_open" expression="0" const="true"/&gt
+    &ltVar name="panel_y" expression="200" const="true"/&gt
+    &ltVar name="move_distance" expression="380" const="true"/&gt
+
+    &ltFramerateController name="panel_framerate_controller" loop="false"&gt
+        &ltControlPoint time="0" frameRate="50"/&gt
+        &ltControlPoint time="800" frameRate="0"/&gt
+    &lt/FramerateController&gt
+
+    &ltVar name="ani_offset_x"&gt
+        &ltVariableAnimation&gt
+            &ltAniFrame value="#ani_begin_x" time="0"/&gt
+            &ltAniFrame value="0" time="300"/&gt
+            &ltAniFrame value="0" time="100000000000000"/&gt
+        &lt/VariableAnimation&gt
+    &lt/Var&gt
+    &ltVar name="ani_rotation"&gt
+        &ltVariableAnimation delay="200"&gt
+            &ltAniFrame value="-180" time="0"/&gt
+            &ltAniFrame value="0" time="300"/&gt
+            &ltAniFrame value="0" time="100000000000000"/&gt
+        &lt/VariableAnimation&gt
+    &lt/Var&gt
+    &ltVar name="panel_x" expression="(#panel_open-1)*#move_distance+#ani_offset_x"/&gt
+
+    &ltGroup x="#panel_x" y="#panel_y"&gt
+        &lt!-- weather info display --&gt
+        &ltImage src="weather_bg.png" /&gt
+        &ltVar name="has_night_icon" expression="eq(#weather_id,0)+eq(#weather_id,1)+eq(#weather_id,3)+eq(#weather_id,8)+eq(#weather_id,14)" /&gt
+        &ltVar name="icon_suffix" expression="ifelse(#has_night_icon,'_'+not(ge(#hour24,6)*le(#hour24,17)),'')" type="string" /&gt
+        &ltImage x="210" y="-26" align="center" srcExp="'weather/weather_' + #weather_id + @icon_suffix + '.png'"/&gt 
+
+        &ltDateTime x="210" y="110" format="M月d日 EE  NNNN"  align="center" color="#FFFFFFFF" size="18" /&gt
+        &lt!-- weather location --&gt
+        &ltText x="36" y="30" size="25" color="#FFFFFFFF" alpha="200" format="%s" paras="@weather_location" /&gt
+        &ltText x="36" y="60" size="22" color="#FFFFFFFF" alpha="250" format="%s" paras="@weather_description" /&gt
+        &ltText x="350" y="30" size="22" color="#00FFFFFF" alpha="250" text="℃" /&gt
+        &ltText x="347" y="20" textExp="ifelse(isnull(#weather_temperature),'~',#weather_temperature)" size="48" align="right" color="#FFFFFFFF" alpha="250" format="%d" paras="#weather_temperature" /&gt
+        &ltText x="372" y="66" align="right" size="18" color="#FFFFFFFF" alpha="250" format="%s" paras="@weather_temperature_range"/&gt
+
+        &ltButton x="375" y="10" w="48" h="127"&gt
+            &ltNormal&gt
+                &ltImage src="play_n.png" x="375" y="44" centerX="24" centerY="24" alpha="180" angle="#panel_open*180+#ani_rotation"/&gt
+            &lt/Normal&gt
+            &ltPressed&gt
+                &ltImage src="play_p.png" x="375" y="44" centerX="24" centerY="24" alpha="180" angle="#panel_open*180+#ani_rotation"/&gt
+            &lt/Pressed&gt
+            &ltTriggers&gt
+                &ltTrigger action="up"&gt
+                    &ltVariableCommand name="panel_open" expression="not(#panel_open)"/&gt
+                    &ltVariableCommand name="ani_begin_x" expression="ifelse(#panel_open,-#move_distance,#move_distance)"/&gt
+                    &ltCommand target="ani_offset_x.animation" value="play"/&gt
+                    &ltCommand target="ani_rotation.animation" value="play"/&gt
+                    &ltCommand target="panel_framerate_controller.animation" value="play"/&gt
+                &lt/Trigger&gt
+            &lt/Triggers&gt
+        &lt/Button&gt
+
+    &lt/Group&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>Group</h4>
+				<a name="t6">
+				<p class="part">
+<listing> Group是可以多层套用的,x和y的值是叠加的，如果你想整体移动一个组里的内容这不失为一个比较快捷的方法</listing>
+<pre>
+&ltGroup x=" "  y="  "&gt
+            &ltGroup  x=" "  y="  " &gt
+                     //内容
+            &lt/Group&gt
+&lt/Group&gt
+</pre>	
+<listing>锁屏可实现Group支持对齐方式，需要手动添加当前Group的宽w和高h</listing>	
+<pre>
+ &ltGroup   w="100"  h="200"  align="center"  alignV="center" &gt
+       &ltImage x="0" y="#screen_height-335"   src="bottom_bg.png" /&gt
+       &ltImage x="0" y="#screen_height-335"   src="bottom_bg_heightlight.png"/&gt 
+ &lt/Group&gt
+</pre>		
+				</p>
+			</div>
+				
+			<hr/>
+			<div id="content">
+				<h4>黑/白天变化</h4>
+				<a name="t7">
+				<p class="part">
+<listing>确定几个时间点：6点，18点，0点
+通过当前时间和这几个时间点的比较，可以通过visibility来控制显示与否</listing>
+<pre>
+&lt!-- 白天 --&gt
+ &ltGroup x=" " y=" " visibility="ge(#hour24,6)*le(#hour24,17)"&gt
+			//内容
+ &lt/Group&gt
+&lt!-- 晚上 --&gt
+ &ltGroup x=" " y=" " visibility="ge(#hour24,18)*le(#hour24,23)+ge(#hour24,0)*le(#hour24,5)"&gt
+			//内容
+ &lt/Group&gt
+</pre>				
+				</p>
+			</div>
+
+				<hr/>
+			<div id="content">
+				<h4>图片显示数字</h4>
+				<a name="t8">
+				<p class="part">
+<listing>通过ImageNumber实现用图片显示数字,ImageNumber 支持对齐，动画，遮罩跟Image一样，不再赘述.
+	   实例：(首先要有0-9的切图，命名方式和time相同)（设今天的日期是2013年3月22日</listing>
+<pre>
+&ltImageNumber  x="0" y="10"  align="center"  number="#year*10000+(#month+1)*100+#date" src="time.png"/&gt
+</pre>
+<listing>在手机上显示的结果是用time的图显示的20130322	</listing>			
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>解锁命令</h4>
+				<a name="t9">
+				<p class="part">
+<listing>可以实现解锁功能，用法如下：</listing>
+<pre>
+&ltExternCommand command="unlock"/&gt
+</pre>	
+<listing><a href="#t3">同命令动画</a></listing>			
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>桌面图标变形</h4>
+				<a name="t10">
+				<p class="part">
+<listing></listing>
+<pre>
+&ltFONT color=black size=2&gt //现在图标变形新代码
+	&lt?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt
+	&ltIconTransform&gt
+		&ltPointsMapping&gt
+			&ltPoint fromX="0" fromY="0" toX="10" toY="1" /&gt
+			&ltPoint fromX="136" fromY="0" toX="122" toY="18" /&gt
+			&ltPoint fromX="136" fromY="136" toX="122" toY="130" /&gt
+			&ltPoint fromX="0" fromY="136" toX="10" toY="113" /&gt
+		&lt/PointsMapping&gt
+	&lt/IconTransform&gt
+	//通过调整图标四个顶点达到变形
+	//fromX fromY初始位置 ， toX="" toY=""你想要调整到的位置
+&lt/FONT&gt
+</pre>				
+				</p>
+			</div>
+</div>

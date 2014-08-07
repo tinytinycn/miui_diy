@@ -1,0 +1,22 @@
+显示指定格式的文字.
+Text属性:
+	x y :坐标支持变量 
+	color: 文字颜色，#FFFFFFFF 
+	size: 文字大小 
+	format: 如果需要在文字中显示变量数字，需要指定格式, 用%d 指定数字位置
+	paras: 如果指定了format, 需要在paras里指定%d对应的变量表达式, 可以有多个变量表达式用"," 隔开
+	align: left, center, right，文字坐标的对齐方式 (不支持alignV)
+	angle: 旋转角度,文字和日期都支持旋转 
+		&ltText angle=""/&gt 
+	marqueeSpeed: 新增自动滚动功能,如果制定了宽度和滚动速度,文字超过宽度的时会自动滚动显示
+		如果制定了宽度和滚动速度marqueeSpeed,文字超过宽度的时会自动滚动显示文本支持多行
+		&ltText  name="text1" multiLine="true" width="150" .../ 
+		#text1.text_height 为折行后的高度
+Text可选属性:
+	spacingMult  行距倍数 默认1
+	spacingAdd  行距增加量 默认0
+	next_alarm_time 下一个闹钟时间
+		&ltText text="@next_alarm_time" .../&gt
+文本元素支持文字宽度变量属性 text_width
+	&ltText name="tt" .../&gt 
+	#tt.text_width 

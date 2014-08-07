@@ -1,0 +1,69 @@
+<head>
+<link title="style" href="css/index.css" type="text/css" rel="stylesheet"/>
+<title>百变图标 by xzh&trade;</title>
+</head>
+<div id="navigation">
+			<li class="function">基本功能</li>
+			<a href="#manifest"><li>manifest.xml</li></a>
+			<a href="#fancy_icon"><li>百变图标</li></a>
+			<a href="#update"><li><add>update!</add></li></a>
+			<br />
+			<li class="function"><a href="index.html"><b>返回【主页】</b></a></li>
+			<a href=""><li></li></a>
+</div>
+
+<div id="main_content">
+			<h2>MIUI百变图标教程</h2>
+			<p>
+			MIUIv5新增动态图标，基于百变框架，和百变锁屏使用相同语法，所以有很高的灵活度，主题制作者可以轻松做出各种各样的动态图标.</p>
+			
+			<hr/>
+			<div id="content">
+				<h4>manifest.xml</h4>
+				<a name="manifest">
+				<p class="part">
+<listing>
+icons/fancy_icons/com.android.AppName/manifest.xml 目录下,manifest.xml文件是描述脚本.
+* 每个动态图标是一个文件夹，和静态png图标同样的名字，没有后缀名，文件夹里面是manifest.xml和图片资源.
+* 根节点 Icon 属性:
+	useVariableUpdater 指定需要哪些系统变量,目前包括电量和时间,可以指定时间的更新周期.
+	如果时间小工具每秒更新一次,需要指定更新周期为1秒,否则默认会每分钟更新一次.
+	如果小工具只显示日期，则每天更新一次，可以指定更新周期为1天.
+	尽量选择较长的更新周期，以节约系统资源.
+* 目前支持的tag： Battery, DateTime.Hour,DateTime.Minute,DateTime.Second
+	如果某个小工具不需要电量或时间变量，则需要使用useVariableUpdater="none"，指定不做时间变量等更新.
+	如果某个小工具显示系统电量并且显示根据小时时间每小时更换背景图片: useVariableUpdater="Battery,DateTime.Hour"	
+</listing>	 
+<pre>
+&lt?xml version="1.0" encoding="utf-8"?&gt
+&lt!-- calendar --&gt
+&ltIcon version="1" frameRate="0" width="136" height="136" screenWidth="720" useVariableUpdater="DateTime.Hour"&gt
+    &ltGroup pivotX="68" pivotY="68"&gt
+       &ltImage x="68" y="68" align="center" alignV="center" src="calendar_icon.png" srcid="#date" /&gt
+    &lt/Group&gt
+&lt/Icon&gt
+</pre>
+				</p>
+			</div>
+			
+			<hr/>
+			<div id="content">
+				<h4>百变图标(资源帖)</h4>
+				<a name="fancy_icon">
+				<p class="part">
+					看看别人的代码,去下载mtz:<br/>
+							<a href="http://www.miui.com/thread-1045828-1-1.html">http://www.miui.com/thread-1045828-1-1.html</a><br/>
+							<a href="http://www.miui.com/thread-1300126-1-1.html">http://www.miui.com/thread-1300126-1-1.html</a><br/>
+							<a href="http://www.miui.com/thread-1300750-1-1.html">http://www.miui.com/thread-1300750-1-1.html</a>
+				</p>
+			</div>
+			<hr/>
+			<div id="content">
+				<h4><add>update!公告</add></h4>
+				<a name="update">
+				<p class="part">
+					<add>2013.8.1更新时间</add>
+				</p>
+			</div>
+			
+</div>

@@ -1,0 +1,21 @@
+&lt?xml version="1.0" encoding="utf-8"?&gt
+&ltLockscreen &gt
+	&ltWallpaper/&gt              ///////////壁纸
+	
+	&ltGroup &gt
+		&ltText /&gt
+		&ltImage /&gt
+	&lt/Group&gt
+	
+	&ltText /&gt                //////////文本部件
+	&ltImage /&gt               //////////图片部件
+	&ltTime /&gt                //////////时间部件
+	&ltDateTime /&gt            //////////日期部件
+
+	&ltUnlocker &gt              //////////解锁部件(继承Silder部件)
+		&ltStartPoint&gt	
+		&lt/StartPoint&gt
+		&ltEndPoint&gt		
+		&lt/EndPoint&gt
+	&lt/Unlocker&gt
+&lt/Lockscreen&gt

@@ -1,0 +1,47 @@
+当前支持变量:(以#开头)
+*部件变量： 部件名.属性名  #unlocker.move_x
+ move_x  解锁时在x方向移动距离
+ move_y  解锁时在y方向移动距离
+ move_dist 解锁时移动距离
+ state 解锁状态： 正常:0 按下:1 到达解锁位置:2
+<add>
+ 新增:触摸开始时间变量#touch_begin_time ，可以在Button的up事件中用来
+ 计算滑动速度:v = (#touch_x - #touch_begin_x)/(#time_sys - #touch_begin_time)
+</add>
+*全局变量：
+ time 当前时间，long
+ touch_x 当前触摸点 x
+ touch_y 当前触摸点 y
+
+ screen_width 屏幕宽度
+ screen_height 屏幕高度
+ raw_screen_width 未经缩放后的原始屏幕宽度
+ raw_screen_height 未经缩放后的原始屏幕高度
+ 
+ battery_level 电池电量 0-100
+ battery_state 电池状态： 正常:0 充电:1 电量低:2 已充满:3
+ sms_unread_count 未读短信
+ call_missed_count 未接电话
+
+*时间日期变量
+ time_sys 系统当前时间毫秒数。
+ ampm 上/下午 // 0 am,1 pm
+ hour12 小时，12小时制
+ hour24 小时，24小时制
+ minute 分钟
+ second 秒
+ year 年
+ month 月  //0-11
+ date 日
+ day_of_week 星期  // 1-7 星期日到星期六
+<add>
+新增:系统时间格式变量<br />
+#time_format   0: 12小时制; 1: 24小时制 <br />
+</add>
+intercept_sys_touch是否截获以后的触摸事件，避免被其他View捕获，例如在自由桌面widget中可以防止在widget上进行触摸操作时桌面滚动和进入编辑模式
+<pre>
+//alpha值的变量表达式表示该图片只有在非充电状态显示，并且随着解锁水平方向的拖动逐渐变透明至
+消失。	
+&ltImage x="162" y="#screen_height-84" src="hs_path_bg.png" 
+alpha="(255-#unlocker.move_x/100*255)*min(1, abs(1-#battery_state))"/&gt
+</pre>
